@@ -1,0 +1,16 @@
+= ys-file-tools
+
+File tools. Command line application.
+
+== Build
+Run command:
+[source]
+sbt clean dist
+
+Result ZIP file is located under _target/universal_ directory
+
+== Running
+Run command from the <installation>/bin/ :
+
+[source]
+runWithPause.bat
