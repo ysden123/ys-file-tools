@@ -78,11 +78,6 @@ class KeywordAnalyzerTest extends AnyFunSuite:
     assert(duplicates.nonEmpty)
     assert(duplicates.size == 1)
     duplicates.foreach(d => println(s"${d._1} -> ${d._2}"))
-
-    keywords = KeywordAnalyzer.buildKeywordList("C:/work/Lightroom Keywords.txt")
-    duplicates = KeywordAnalyzer.findDuplicates(keywords, false)
-    println(s"Number of duplicates = ${duplicates.size}")
-    duplicates.foreach(d => println(s"${d._1} -> ${d._2}"))
   }
 
   test("duplicates 2") {
@@ -104,28 +99,9 @@ class KeywordAnalyzerTest extends AnyFunSuite:
     def output(keyword: Keyword): Unit =
       println(s"""name: ${keyword.name}, level=${keyword.level}, parent: ${if keyword.parent.nonEmpty then keyword.parent.get.name else ""}""")
 
-//    val keywords = KeywordAnalyzer.buildKeywordList("src/test/resources/keywords/test5.txt")
-//    val keywords = KeywordAnalyzer.buildKeywordList("src/test/resources/keywords/test6.txt")
-//    val keywords = KeywordAnalyzer.buildKeywordList2("src/test/resources/keywords/test6.txt")
-//    val keywords = KeywordAnalyzer.buildKeywordList("src/test/resources/keywords/test5.txt")
-    val keywords = KeywordAnalyzer.buildKeywordList("C:/work/Lightroom Keywords.txt")
+    val keywords = KeywordAnalyzer.buildKeywordList("src/test/resources/keywords/test5.txt")
     println("Structure:")
     KeywordAnalyzer.walk(keywords, output)
-  }
-
-  test("duplicates real") {
-    def output(keyword: Keyword): Unit =
-      println(s"""name: ${keyword.name}, level=${keyword.level}, parent: ${if keyword.parent.nonEmpty then keyword.parent.get.name else ""}""")
-
-    val keywords = KeywordAnalyzer.buildKeywordList("C:/work/Lightroom Keywords.txt")
-    val duplicates = KeywordAnalyzer.findDuplicates(keywords, false)
-    println(s"Number of duplicates = ${duplicates.size}")
-    duplicates.foreach(duplicate =>
-      val name = duplicate._1
-      val list = duplicate._2
-      println(s"duplicated name: $name")
-      list.foreach(output)
-    )
   }
 end KeywordAnalyzerTest
 
