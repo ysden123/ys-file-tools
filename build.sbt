@@ -1,7 +1,7 @@
 import java.util.Calendar
 
 ThisBuild / scalaVersion := "3.2.1"
-ThisBuild / version := "1.0.0"
+ThisBuild / version := "2.0.0"
 ThisBuild / organization := "com.stulsoft"
 ThisBuild / organizationName := "stulsoft"
 
@@ -13,8 +13,9 @@ lazy val root = (project in file("."))
     libraryDependencies += "ch.qos.logback" % "logback-classic" % "1.4.5",
     libraryDependencies += "commons-io" % "commons-io" % "2.11.0",
     libraryDependencies += "org.apache.commons" % "commons-imaging" % "1.0-alpha3",
+    libraryDependencies += "org.scala-lang.modules" %% "scala-swing" % "3.0.0",
 
-    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.14" % Test
+    libraryDependencies += "org.scalatest" %% "scalatest" % "3.2.15" % Test
   )
   .enablePlugins(JavaAppPackaging)
 

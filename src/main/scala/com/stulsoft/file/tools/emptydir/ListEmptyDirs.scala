@@ -19,28 +19,19 @@ object ListEmptyDirs:
         exception.printStackTrace()
         false
 
-  private def listEmptyDirs(path: String): Unit =
-    println(s"Empty directories in the $path:")
+  def buildListOfEmptyDirs(path:String):String=
     Using(Files.walk(Paths.get(path))) {
       stream =>
-        var count = 0
         stream.filter(f => Files.isDirectory(f))
           .filter(p => predicateEmptyDir(p))
           .map(p => p.toFile.getAbsolutePath)
-          .forEach(dir => {
-            count += 1
-            println(dir)
-          })
-        println(s"Found $count empty directories")
-    } match
-      case Success(_) =>
+          .toList
+          .asScala
+          .mkString("\n")
+  } match
+      case Success(result) => result
       case Failure(error) => error match
-        case _: NoSuchFileException => println(s"""Cannot find the "$path" directory.""")
-        case exception: Exception => println(exception.getMessage)
-
-  def listEmptyDirs(): Unit =
-    println("Enter directory. Empty line to exist:")
-    val path = readLine()
-    if path.nonEmpty then listEmptyDirs(path)
+        case _: NoSuchFileException => s"""Cannot find the "$path" directory."""
+        case exception: Exception => exception.getMessage
 
 

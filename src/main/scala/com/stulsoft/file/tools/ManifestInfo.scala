@@ -54,3 +54,12 @@ case class ManifestInfo(groupId:String, artifactId:String) extends StrictLogging
       )
     catch
       case exception: Exception => exception.printStackTrace()
+
+  def version():Option[String] =
+    resourceWithManifest() match
+      case Some(url) =>
+        val is = url.openStream()
+        val manifest = new Manifest(is)
+        is.close()
+        Option(manifestAttrValue(manifest, "Implementation-Version"))
+      case None => None

@@ -13,8 +13,7 @@ import scala.io.StdIn.readLine
 import scala.util.{Failure, Success, Using}
 
 object ListAllExtensions:
-  private def findAllExtensions(path: String): Unit =
-    println(s"All file extensions in the $path:")
+  def findAllExtensions(path: String): Either[String, String] =
     val result = mutable.SortedSet[String]()
 
     Using(Files.walk(Paths.get(path))) {
@@ -25,13 +24,7 @@ object ListAllExtensions:
           .forEach(extension => result += extension)
     } match
       case Success(_) =>
+        Right(result.mkString("\n"))
       case Failure(error) => error match
-        case _: NoSuchFileException => println(s"""Cannot find the "$path" directory.""")
-        case exception: Exception => println(exception.getMessage)
-    result.foreach(println)
-    println(s"Found ${result.size} extensions")
-
-  def findAllExtensions(): Unit =
-    println("Enter directory. Empty line to exist:")
-    val path = readLine()
-    if path.nonEmpty then findAllExtensions(path)
+        case _: NoSuchFileException => Left(s"""Cannot find the "$path" directory.""")
+        case exception: Exception => Left(exception.getMessage)
