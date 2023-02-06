@@ -4,14 +4,16 @@
 
 package com.stulsoft.file.tools.emptydir
 
+import com.stulsoft.file.tools.data.DataProvider
+
 import java.io.File
 import scala.swing.FileChooser.Result.Approve
 import scala.swing.Swing.EtchedBorder
 import scala.swing.event.{ButtonClicked, ValueChanged}
-import scala.swing.{BorderPanel, Button, Dialog, Dimension, FileChooser, FlowPanel, Swing, TextArea, TextField, Window}
+import scala.swing.*
 
-class ListEmptyDirsWindow(owner: Window) extends Dialog(owner) {
-  private var initDir: File = _
+class ListEmptyDirsWindow extends Frame {
+//  private var initDir: File = new File(DataProvider.lastFile())
   private val runButton: Button = new Button("Start search") {
     enabled = false
     reactions += {
@@ -31,13 +33,13 @@ class ListEmptyDirsWindow(owner: Window) extends Dialog(owner) {
     reactions += {
       case ButtonClicked(_) =>
         result.text = "Please wait..."
-        val chooser = new FileChooser(initDir)
+        val chooser = new FileChooser(new File(DataProvider.lastFile()))
         chooser.title = "Select directory"
         chooser.fileSelectionMode = FileChooser.SelectionMode.DirectoriesOnly
         val choice = chooser.showOpenDialog(this)
         if choice == Approve then
           val file = chooser.selectedFile
-          initDir = file
+          DataProvider.storeLastFile(file.getAbsolutePath)
           path.text = file.getAbsolutePath
     }
   }

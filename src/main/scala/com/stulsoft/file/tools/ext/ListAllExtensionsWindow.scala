@@ -3,15 +3,15 @@
  */
 
 package com.stulsoft.file.tools.ext
+import com.stulsoft.file.tools.data.DataProvider
+
 import java.io.File
 import scala.swing.FileChooser.Result.Approve
 import scala.swing.Swing.EtchedBorder
 import scala.swing.event.{ButtonClicked, ValueChanged}
-import scala.swing.{BorderPanel, Button, Dialog, Dimension, FileChooser, FlowPanel, ScrollPane, Swing, TextArea, TextField, Window}
+import scala.swing.*
 
-class ListAllExtensionsWindow(owner: Window) extends Dialog(owner) {
-  private var initDir: File = _
-
+class ListAllExtensionsWindow extends Frame {
   private val runButton: Button = new Button("Start search") {
     enabled = false
     reactions += {
@@ -33,13 +33,13 @@ class ListAllExtensionsWindow(owner: Window) extends Dialog(owner) {
   private val chooseFileButton = new Button("...") {
     reactions += {
       case ButtonClicked(_) =>
-        val chooser = new FileChooser(initDir)
+        val chooser = new FileChooser(new File(DataProvider.lastFile()))
         chooser.title = "Select directory"
         chooser.fileSelectionMode = FileChooser.SelectionMode.DirectoriesOnly
         val choice = chooser.showOpenDialog(this)
         if choice == Approve then
           val file = chooser.selectedFile
-          initDir = file
+          DataProvider.storeLastFile(file.getAbsolutePath)
           path.text = file.getAbsolutePath
     }
   }
@@ -62,7 +62,7 @@ class ListAllExtensionsWindow(owner: Window) extends Dialog(owner) {
 
   }
 
-  title = "List empty directories"
+  title = "List all extensions"
   size = new Dimension(600, 300)
   centerOnScreen()
 

@@ -21,16 +21,14 @@ object Main extends SimpleSwingApplication:
         ""
     title = "YS File Tools " + version
 
-    val mainFrame: MainFrame = this
-
     menuBar = new MenuBar{
       contents += new Menu("Actions"){
         contents += new MenuItem(Action("List empty directories"){
-            new ListEmptyDirsWindow(mainFrame).open()
+            new ListEmptyDirsWindow().open()
         })
 
         contents += new MenuItem(Action("List all extensions"){
-            new ListAllExtensionsWindow(mainFrame).open()
+            new ListAllExtensionsWindow().open()
         })
 
         contents += new MenuItem(Action("Show on map"){
@@ -38,7 +36,7 @@ object Main extends SimpleSwingApplication:
         })
 
         contents += new MenuItem(Action("Analyze keywords"){
-          new KeywordAnalyzerWindow(mainFrame).open()
+          new KeywordAnalyzerWindow().open()
         })
 
         contents += new MenuItem(Action("Close") {

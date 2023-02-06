@@ -4,6 +4,8 @@
 
 package com.stulsoft.file.tools.gps
 
+import com.stulsoft.file.tools.data.DataProvider
+
 import scala.io.StdIn.readLine
 import org.apache.commons.imaging.Imaging
 import org.apache.commons.imaging.formats.jpeg.JpegImageMetadata
@@ -18,8 +20,6 @@ import scala.swing.FileChooser
 import scala.swing.FileChooser.Result.Approve
 
 object GpsMapLauncher:
-  private var initFile: File = _
-
   private def extractGPSInfo(path: String): ExtractResult =
     try
       Imaging.getMetadata(new File(path)) match {
@@ -48,7 +48,6 @@ object GpsMapLauncher:
           val latitude = gpsInfo.getLatitudeAsDegreesNorth
           val longitude = gpsInfo.getLongitudeAsDegreesEast
           val searchURL = s"https://www.google.com/maps/search/?api=1&query=$latitude%2C$longitude"
-          println(s"searchURL: $searchURL")
           if (Desktop.isDesktopSupported && Desktop.getDesktop.isSupported(Desktop.Action.BROWSE)) {
             Desktop.getDesktop.browse(new URI(searchURL))
             Option.empty
@@ -61,7 +60,7 @@ object GpsMapLauncher:
       case exception: Exception => Option(exception.getMessage)
 
   def showGps(): Unit =
-    val chooser = new FileChooser(initFile)
+    val chooser = new FileChooser(new File(DataProvider.lastFile()))
     chooser.title = "Select image to show on Google map"
     chooser.fileSelectionMode = FileChooser.SelectionMode.FilesOnly
     chooser.fileFilter = new FileFilter {
@@ -81,7 +80,7 @@ object GpsMapLauncher:
     val choice = chooser.showOpenDialog(null)
     if choice == Approve then
       val file = chooser.selectedFile
-      initFile = file
+      DataProvider.storeLastFile(file.getAbsolutePath)
       showOnMap(file.getAbsolutePath) match
         case Some(error) =>
           showMessage(parent = null, error)

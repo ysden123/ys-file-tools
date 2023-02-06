@@ -4,15 +4,16 @@
 
 package com.stulsoft.file.tools.keywords
 
+import com.stulsoft.file.tools.data.DataProvider
+
 import java.io.File
 import javax.swing.filechooser.FileFilter
 import scala.swing.FileChooser.Result.Approve
 import scala.swing.TabbedPane.Page
 import scala.swing.event.{ButtonClicked, ValueChanged}
-import scala.swing.{BorderPanel, Button, Dialog, Dimension, FileChooser, FlowPanel, ScrollPane, TabbedPane, TextArea, TextField, Window}
+import scala.swing.*
 
-class KeywordAnalyzerWindow(owner: Window) extends Dialog(owner) {
-  private var initFile: File = _
+class KeywordAnalyzerWindow extends Frame {
   private var keywords: Iterable[Keyword] = Nil
 
   private val runButton: Button = new Button("Analyze") {
@@ -47,7 +48,7 @@ class KeywordAnalyzerWindow(owner: Window) extends Dialog(owner) {
   private val chooseFileButton = new Button("...") {
     reactions += {
       case ButtonClicked(_) =>
-        val chooser = new FileChooser(initFile)
+        val chooser = new FileChooser(new File(DataProvider.lastFile()))
         chooser.title = "Select file to analyze keywords"
         chooser.fileSelectionMode = FileChooser.SelectionMode.FilesOnly
         chooser.fileFilter = new FileFilter {
@@ -64,7 +65,7 @@ class KeywordAnalyzerWindow(owner: Window) extends Dialog(owner) {
         val choice = chooser.showOpenDialog(this)
         if choice == Approve then
           val file = chooser.selectedFile
-          initFile = file
+          DataProvider.storeLastFile(file.getAbsolutePath)
           path.text = file.getAbsolutePath
     }
   }

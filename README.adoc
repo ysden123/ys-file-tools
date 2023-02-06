@@ -1,6 +1,16 @@
 = ys-file-tools
 
-File tools. Command line application.
+File tools.
+
+== Tools
+
+* list empty directories
+* list all file extensions
+* GPS - show on the Google map
+* an information about Lightroom keywords
+** a number of the root keywords
+** a max level
+** a list of the duplicated keywords
 
 == Build
 Run command:
@@ -13,4 +23,4 @@ Result ZIP file is located under _target/universal_ directory
 Run command from the <installation>/bin/ :
 
 [source]
-runWithPause.bat
+ys-file-tools.bat
