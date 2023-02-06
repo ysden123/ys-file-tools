@@ -3,16 +3,13 @@
  */
 
 package com.stulsoft.file.tools.ext
-
 import java.io.File
-import javax.swing.border.TitledBorder
-import scala.swing.*
-import scala.swing.Component.*
-import scala.swing.Swing.*
 import scala.swing.FileChooser.Result.Approve
+import scala.swing.Swing.EtchedBorder
 import scala.swing.event.{ButtonClicked, ValueChanged}
+import scala.swing.{BorderPanel, Button, Dialog, Dimension, FileChooser, FlowPanel, ScrollPane, Swing, TextArea, TextField, Window}
 
-class ListAllExtensionsPanel extends BoxPanel(Orientation.Vertical):
+class ListAllExtensionsWindow(owner: Window) extends Dialog(owner) {
   private var initDir: File = _
 
   private val runButton: Button = new Button("Start search") {
@@ -58,9 +55,15 @@ class ListAllExtensionsPanel extends BoxPanel(Orientation.Vertical):
 
   private val selectPanel = new FlowPanel(FlowPanel.Alignment.Left)(path, chooseFileButton, runButton) {
   }
+  
+  contents = new BorderPanel {
+    layout(selectPanel) = BorderPanel.Position.North
+    layout(result) = BorderPanel.Position.Center
 
-  contents ++= Seq(selectPanel, result)
+  }
 
-  border = TitledBorder(EtchedBorder, "List extensions")
+  title = "List empty directories"
+  size = new Dimension(600, 300)
+  centerOnScreen()
 
-  visible = false
+}

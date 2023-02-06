@@ -4,18 +4,14 @@
 
 package com.stulsoft.file.tools.keywords
 
-import com.stulsoft.file.tools.ext.ListAllExtensions
-
 import java.io.File
-import javax.swing.border.TitledBorder
 import javax.swing.filechooser.FileFilter
 import scala.swing.FileChooser.Result.Approve
-import scala.swing.Swing.EtchedBorder
 import scala.swing.TabbedPane.Page
 import scala.swing.event.{ButtonClicked, ValueChanged}
-import scala.swing.{BoxPanel, Button, FileChooser, FlowPanel, Orientation, ScrollPane, Swing, TabbedPane, TextArea, TextField}
+import scala.swing.{BorderPanel, Button, Dialog, Dimension, FileChooser, FlowPanel, ScrollPane, TabbedPane, TextArea, TextField, Window}
 
-class KeywordAnalyzerPanel extends BoxPanel(Orientation.Vertical):
+class KeywordAnalyzerWindow(owner: Window) extends Dialog(owner) {
   private var initFile: File = _
   private var keywords: Iterable[Keyword] = Nil
 
@@ -31,9 +27,9 @@ class KeywordAnalyzerPanel extends BoxPanel(Orientation.Vertical):
 
         duplicateList.text = ""
         val duplicates = KeywordAnalyzer.findDuplicates(keywords, true)
-        duplicates.foreach(duplicate =>{
+        duplicates.foreach(duplicate => {
           duplicateList.text += s"${duplicate._1}:\n"
-          duplicate._2.foreach(keyword=>{
+          duplicate._2.foreach(keyword => {
             val parent = if keyword.parent.nonEmpty then keyword.parent.get.name else ""
             duplicateList.text += s"   on ${keyword.level} level with parent: $parent\n"
           })
@@ -73,7 +69,7 @@ class KeywordAnalyzerPanel extends BoxPanel(Orientation.Vertical):
     }
   }
 
-  private val statisticsList = new TextArea(10, 20) {
+  private val statisticsList = new TextArea() {
     editable = false
   }
 
@@ -81,7 +77,7 @@ class KeywordAnalyzerPanel extends BoxPanel(Orientation.Vertical):
     contents = statisticsList
   }
 
-  private val duplicateList = new TextArea(10, 20) {
+  private val duplicateList = new TextArea() {
     editable = false
   }
 
@@ -96,9 +92,13 @@ class KeywordAnalyzerPanel extends BoxPanel(Orientation.Vertical):
 
   private val selectPanel = new FlowPanel(FlowPanel.Alignment.Left)(path, chooseFileButton, runButton) {
   }
-
-  contents ++= Seq(selectPanel, tabs)
-
-  border = TitledBorder(EtchedBorder, "Keyword analysis")
-
-  visible = false
+  
+  contents = new BorderPanel{
+    layout(selectPanel) = BorderPanel.Position.North
+    layout(tabs) = BorderPanel.Position.Center
+  }
+  
+  title = "Keyword analysis"
+  size = new Dimension(600, 300)
+  centerOnScreen()
+}

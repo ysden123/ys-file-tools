@@ -4,44 +4,33 @@
 
 package com.stulsoft.file.tools
 
-import com.stulsoft.file.tools.emptydir.ListEmptyDirsPanel
-import com.stulsoft.file.tools.ext.ListAllExtensionsPanel
+import com.stulsoft.file.tools.emptydir.ListEmptyDirsWindow
+import com.stulsoft.file.tools.ext.ListAllExtensionsWindow
 import com.stulsoft.file.tools.gps.GpsMapLauncher
-import com.stulsoft.file.tools.keywords.KeywordAnalyzerPanel
+import com.stulsoft.file.tools.keywords.KeywordAnalyzerWindow
 
 import scala.swing.*
 import scala.swing.Component.*
 import scala.swing.event.*
 object Main extends SimpleSwingApplication:
   override def top: Frame = new MainFrame{
-    val version = ManifestInfo("com.stulsoft", "ys-file-tools").version() match
+    val version: String = ManifestInfo("com.stulsoft", "ys-file-tools").version() match
       case Some(version) =>
         version
       case None =>
         ""
     title = "YS File Tools " + version
 
-    val listEmptyDirsPanel = new ListEmptyDirsPanel
-
-    val listAllExtensionsPanel = new ListAllExtensionsPanel
-
-    val keywordAnalyzerPanel = new KeywordAnalyzerPanel
-
-    val panels: Array[Panel] = Array(listEmptyDirsPanel, listAllExtensionsPanel, keywordAnalyzerPanel)
-
-    def activatePanel(activePanel: Panel): Unit =
-      panels.foreach(thePanel => thePanel.visible = thePanel == activePanel)
-
-    contents = new FlowPanel(FlowPanel.Alignment.Center)(panels: _*)
+    val mainFrame: MainFrame = this
 
     menuBar = new MenuBar{
       contents += new Menu("Actions"){
         contents += new MenuItem(Action("List empty directories"){
-          activatePanel(listEmptyDirsPanel)
+            new ListEmptyDirsWindow(mainFrame).open()
         })
 
         contents += new MenuItem(Action("List all extensions"){
-          activatePanel(listAllExtensionsPanel)
+            new ListAllExtensionsWindow(mainFrame).open()
         })
 
         contents += new MenuItem(Action("Show on map"){
@@ -49,7 +38,7 @@ object Main extends SimpleSwingApplication:
         })
 
         contents += new MenuItem(Action("Analyze keywords"){
-          activatePanel(keywordAnalyzerPanel)
+          new KeywordAnalyzerWindow(mainFrame).open()
         })
 
         contents += new MenuItem(Action("Close") {
@@ -61,4 +50,3 @@ object Main extends SimpleSwingApplication:
     size = new Dimension(600,400)
     centerOnScreen()
   }
-
