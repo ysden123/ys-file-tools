@@ -12,12 +12,12 @@ import scala.swing.Swing.EtchedBorder
 import scala.swing.event.{ButtonClicked, ValueChanged}
 import scala.swing.*
 
-class ListEmptyDirsWindow extends Frame {
-//  private var initDir: File = new File(DataProvider.lastFile())
+class ListEmptyDirsFrame extends BorderPanel {
   private val runButton: Button = new Button("Start search") {
     enabled = false
     reactions += {
       case ButtonClicked(_) =>
+        result.text = "Please wait..."
         result.text = ListEmptyDirs.buildListOfEmptyDirs(path.text)
     }
   }
@@ -32,7 +32,6 @@ class ListEmptyDirsWindow extends Frame {
   private val chooseFileButton = new Button("...") {
     reactions += {
       case ButtonClicked(_) =>
-        result.text = "Please wait..."
         val chooser = new FileChooser(new File(DataProvider.lastFile()))
         chooser.title = "Select directory"
         chooser.fileSelectionMode = FileChooser.SelectionMode.DirectoriesOnly
@@ -51,13 +50,8 @@ class ListEmptyDirsWindow extends Frame {
   private val selectPanel = new FlowPanel(FlowPanel.Alignment.Left)(path, chooseFileButton, runButton) {
   }
 
-  contents = new BorderPanel{
-    layout(selectPanel) = BorderPanel.Position.North
-    layout(result) = BorderPanel.Position.Center
+  layout(selectPanel) = BorderPanel.Position.North
+  layout(result) = BorderPanel.Position.Center
 
-  }
-
-  title = "List empty directories"
-  size = new Dimension(600, 300)
-  centerOnScreen()
+  border = Swing.TitledBorder(EtchedBorder, "List empty directories")
 }

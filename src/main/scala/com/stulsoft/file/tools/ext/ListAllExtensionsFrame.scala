@@ -3,6 +3,7 @@
  */
 
 package com.stulsoft.file.tools.ext
+
 import com.stulsoft.file.tools.data.DataProvider
 
 import java.io.File
@@ -11,7 +12,7 @@ import scala.swing.Swing.EtchedBorder
 import scala.swing.event.{ButtonClicked, ValueChanged}
 import scala.swing.*
 
-class ListAllExtensionsWindow extends Frame {
+class ListAllExtensionsFrame extends BorderPanel {
   private val runButton: Button = new Button("Start search") {
     enabled = false
     reactions += {
@@ -56,14 +57,7 @@ class ListAllExtensionsWindow extends Frame {
   private val selectPanel = new FlowPanel(FlowPanel.Alignment.Left)(path, chooseFileButton, runButton) {
   }
   
-  contents = new BorderPanel {
-    layout(selectPanel) = BorderPanel.Position.North
-    layout(result) = BorderPanel.Position.Center
-
-  }
-
-  title = "List all extensions"
-  size = new Dimension(600, 300)
-  centerOnScreen()
-
+  layout(selectPanel) = BorderPanel.Position.North
+  layout(result) = BorderPanel.Position.Center
+  border = Swing.TitledBorder(EtchedBorder, "List all extensions")
 }

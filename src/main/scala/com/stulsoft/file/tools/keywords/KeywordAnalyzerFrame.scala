@@ -12,8 +12,9 @@ import scala.swing.FileChooser.Result.Approve
 import scala.swing.TabbedPane.Page
 import scala.swing.event.{ButtonClicked, ValueChanged}
 import scala.swing.*
+import scala.swing.Swing.EtchedBorder
 
-class KeywordAnalyzerWindow extends Frame {
+class KeywordAnalyzerFrame extends BorderPanel {
   private var keywords: Iterable[Keyword] = Nil
 
   private val runButton: Button = new Button("Analyze") {
@@ -70,7 +71,7 @@ class KeywordAnalyzerWindow extends Frame {
     }
   }
 
-  private val statisticsList = new TextArea() {
+  private val statisticsList = new TextArea(10,10) {
     editable = false
   }
 
@@ -93,13 +94,8 @@ class KeywordAnalyzerWindow extends Frame {
 
   private val selectPanel = new FlowPanel(FlowPanel.Alignment.Left)(path, chooseFileButton, runButton) {
   }
-  
-  contents = new BorderPanel{
-    layout(selectPanel) = BorderPanel.Position.North
-    layout(tabs) = BorderPanel.Position.Center
-  }
-  
-  title = "Keyword analysis"
-  size = new Dimension(600, 300)
-  centerOnScreen()
+
+  layout(selectPanel) = BorderPanel.Position.North
+  layout(tabs) = BorderPanel.Position.Center
+  border = Swing.TitledBorder(EtchedBorder, "Keyword analysis")
 }

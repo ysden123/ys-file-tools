@@ -58,16 +58,4 @@ object DataProvider {
   }
 
   loadProperties()
-
-  def main(args: Array[String]): Unit = {
-    DataProvider.properties.entrySet().forEach(p => println(s"${p.getKey} -> ${p.getValue}"))
-    println("====")
-    println(DataProvider.properties)
-/*
-    println(s"lastfile: ${lastFile()}")
-    val fff = new File(lastFile())
-    println(fff.isDirectory)
-    println(properties)
-*/
-  }
 }
