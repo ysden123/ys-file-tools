@@ -13,7 +13,10 @@ import scala.io.StdIn.readLine
 import scala.util.{Failure, Success, Using}
 
 object ListAllExtensions:
-  case class ExtensionInfo(name: String, count: Int)
+  class ExtensionInfo(val name: String, var count: Int = 0) {
+    def increaseCount(): Unit =
+      count += 1
+  }
 
   def findAllExtensions(path: String): Either[String, String] =
     Using(Files.walk(Paths.get(path))) {
@@ -24,8 +27,7 @@ object ListAllExtensions:
             FilenameUtils.getExtension(path.toString))
           .filter(extension => extension.nonEmpty)
           .forEach(extension => {
-            val extensionInfo = extensionInfoMap.getOrElseUpdate(extension, ExtensionInfo(extension, 0))
-            extensionInfoMap.put(extension, ExtensionInfo(extension, extensionInfo.count + 1))
+            extensionInfoMap.getOrElseUpdate(extension, ExtensionInfo(extension)).increaseCount()
           })
         extensionInfoMap
           .values
