@@ -7,10 +7,14 @@ package com.stulsoft.file.tools.emptydir
 import com.stulsoft.file.tools.data.DataProvider
 
 import java.io.File
+import javax.swing.SwingUtilities
+import scala.swing.*
 import scala.swing.FileChooser.Result.Approve
 import scala.swing.Swing.EtchedBorder
 import scala.swing.event.{ButtonClicked, ValueChanged}
-import scala.swing.*
+import scala.util.{Failure, Success}
+
+given ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
 class ListEmptyDirsFrame extends BorderPanel {
   private val runButton: Button = new Button("Start search") {
@@ -18,7 +22,12 @@ class ListEmptyDirsFrame extends BorderPanel {
     reactions += {
       case ButtonClicked(_) =>
         result.text = "Please wait..."
-        result.text = ListEmptyDirs.buildListOfEmptyDirs(path.text)
+        SwingUtilities.invokeLater(() => {
+          ListEmptyDirs.buildListOfEmptyDirs(path.text).onComplete {
+            case Success(emptyDirs) => result.text = emptyDirs
+            case Failure(exception) => result.text = exception.getMessage
+          }
+        })
     }
   }
 

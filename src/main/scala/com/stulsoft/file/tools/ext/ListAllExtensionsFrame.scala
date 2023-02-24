@@ -7,10 +7,14 @@ package com.stulsoft.file.tools.ext
 import com.stulsoft.file.tools.data.DataProvider
 
 import java.io.File
+import javax.swing.SwingUtilities
+import scala.swing.*
 import scala.swing.FileChooser.Result.Approve
 import scala.swing.Swing.EtchedBorder
 import scala.swing.event.{ButtonClicked, ValueChanged}
-import scala.swing.*
+import scala.util.{Failure, Success}
+
+given ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
 class ListAllExtensionsFrame extends BorderPanel {
   private val runButton: Button = new Button("Start search") {
@@ -18,9 +22,16 @@ class ListAllExtensionsFrame extends BorderPanel {
     reactions += {
       case ButtonClicked(_) =>
         resultList.text = "Please wait..."
-        resultList.text = ListAllExtensions.findAllExtensions(path.text) match
-          case Left(error) => "Error: " + error
-          case Right(list) => list
+        SwingUtilities.invokeLater(() => {
+          ListAllExtensions.findAllExtensions(path.text).onComplete {
+            case Success(result) =>
+              result match
+                case Left(error) => resultList.text = "Error: " + error
+                case Right(list) => resultList.text = list
+
+            case Failure(exception) => resultList.text = "Error: " + exception.getMessage
+          }
+        })
     }
   }
 
@@ -56,7 +67,7 @@ class ListAllExtensionsFrame extends BorderPanel {
 
   private val selectPanel = new FlowPanel(FlowPanel.Alignment.Left)(path, chooseFileButton, runButton) {
   }
-  
+
   layout(selectPanel) = BorderPanel.Position.North
   layout(result) = BorderPanel.Position.Center
   border = Swing.TitledBorder(EtchedBorder, "List all extensions")
