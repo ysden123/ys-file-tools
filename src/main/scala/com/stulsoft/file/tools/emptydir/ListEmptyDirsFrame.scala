@@ -6,6 +6,7 @@ package com.stulsoft.file.tools.emptydir
 
 import com.stulsoft.file.tools.data.DataProvider
 
+import java.awt.Cursor
 import java.io.File
 import javax.swing.SwingUtilities
 import scala.swing.*
@@ -17,15 +18,21 @@ import scala.util.{Failure, Success}
 given ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
 class ListEmptyDirsFrame extends BorderPanel {
+  private val thePanel: Panel = this
   private val runButton: Button = new Button("Start search") {
     enabled = false
     reactions += {
       case ButtonClicked(_) =>
+        thePanel.cursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
         result.text = "Please wait..."
         SwingUtilities.invokeLater(() => {
           ListEmptyDirs.buildListOfEmptyDirs(path.text).onComplete {
-            case Success(emptyDirs) => result.text = emptyDirs
-            case Failure(exception) => result.text = exception.getMessage
+            case Success(emptyDirs) =>
+              result.text = emptyDirs
+              thePanel.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+            case Failure(exception) =>
+              result.text = exception.getMessage
+              thePanel.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
           }
         })
     }

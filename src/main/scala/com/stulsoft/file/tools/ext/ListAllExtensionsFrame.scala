@@ -6,6 +6,7 @@ package com.stulsoft.file.tools.ext
 
 import com.stulsoft.file.tools.data.DataProvider
 
+import java.awt.Cursor
 import java.io.File
 import javax.swing.SwingUtilities
 import scala.swing.*
@@ -17,19 +18,26 @@ import scala.util.{Failure, Success}
 given ec: scala.concurrent.ExecutionContext = scala.concurrent.ExecutionContext.global
 
 class ListAllExtensionsFrame extends BorderPanel {
+  private val thePanel: Panel = this
   private val runButton: Button = new Button("Start search") {
     enabled = false
     reactions += {
       case ButtonClicked(_) =>
+        thePanel.cursor = Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR)
         resultList.text = "Please wait..."
         SwingUtilities.invokeLater(() => {
           ListAllExtensions.findAllExtensions(path.text).onComplete {
             case Success(result) =>
               result match
-                case Left(error) => resultList.text = "Error: " + error
-                case Right(list) => resultList.text = list
-
-            case Failure(exception) => resultList.text = "Error: " + exception.getMessage
+                case Left(error) =>
+                  resultList.text = "Error: " + error
+                  thePanel.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+                case Right(list) =>
+                  resultList.text = list
+                  thePanel.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
+            case Failure(exception) =>
+              resultList.text = "Error: " + exception.getMessage
+              thePanel.cursor = Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR)
           }
         })
     }
