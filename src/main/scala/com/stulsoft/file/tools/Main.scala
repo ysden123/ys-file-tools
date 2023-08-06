@@ -4,26 +4,18 @@
 
 package com.stulsoft.file.tools
 
+import com.stulsoft.common.ManifestInfo
 import com.stulsoft.file.tools.emptydir.ListEmptyDirsFrame
 import com.stulsoft.file.tools.ext.ListAllExtensionsFrame
 import com.stulsoft.file.tools.gps.GpsMapLauncher
 import com.stulsoft.file.tools.keywords.KeywordAnalyzerFrame
 
-import javax.swing.JComponent
 import scala.swing.*
-import scala.swing.Component.*
-import scala.swing.event.*
 
 object Main extends SimpleSwingApplication:
   override def top: Frame = new MainFrame {
     val mainFrame: MainFrame = this
-    val version: String = ManifestInfo("com.stulsoft", "ys-file-tools").version() match
-      case Some(version) =>
-        version
-      case None =>
-        ""
-    title = "YS File Tools " + version
-
+    title = ManifestInfo("com.stulsoft", "ys-file-tools").buildTitle("YS File Tools")
     menuBar = new MenuBar {
       contents += new Menu("Actions") {
         contents += new MenuItem(Action("List empty directories") {

@@ -6,7 +6,6 @@ package com.stulsoft.file.tools.keywords
 
 import com.typesafe.scalalogging.LazyLogging
 
-import scala.collection.immutable.TreeMap
 import scala.collection.mutable
 import scala.collection.mutable.ListBuffer
 import scala.io.Source
@@ -27,7 +26,7 @@ object KeywordAnalyzer extends LazyLogging:
     val keywordList = ListBuffer[Keyword]()
 
     try
-      val source = Source.fromFile(filename)
+      val source = Source.fromFile(filename)("UTF-8")
       for (line <- source.getLines()) {
         if line.nonEmpty then
           val extractionResult = extractKeyWord(line)
